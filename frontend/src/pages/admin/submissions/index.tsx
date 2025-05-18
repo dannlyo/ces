@@ -7,6 +7,7 @@ import Modal from "../../../components/modal";
 import { toast } from "react-hot-toast/headless";
 import { Toaster } from "react-hot-toast";
 import Loader from "../../../components/loader";
+import { getAgencies } from "../../../apis/agencies";
 interface Submission {
     id: number
     sid: string
@@ -27,8 +28,12 @@ interface Submission {
 function Submissions() {
     const [isLoading, setIsLoading] = useState(false)
     const [submissions, setSubmissions] = useState<Submission[]>([])
+    const [search, setSearch] = useState('')
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null)
+    const [agency, setAgency] = useState('')
+    const [status, setStatus] = useState('')
+    const [agencies, setAgencies] = useState<any[]>([])
     const handleView = (submission: Submission) => {
         setSelectedSubmission(submission)
         setIsModalOpen(true)
@@ -81,9 +86,33 @@ function Submissions() {
             setRespondLoading(false)
         }
     }
+    const fetchAgencies = async () => {
+        setIsLoading(true)
+        const res = await getAgencies()
+        if(res.status == 'success'){
+            setAgencies(res.data)
+        }
+        setIsLoading(false)
+    }
+    const handleSearchFilters = () => {
+        const filteredSubmissions = submissions.filter((submission) => {
+            const matchesEmail = submission.email.toLowerCase().includes(search.toLowerCase());
+            const matchesAgency = submission.agency.name.toLowerCase().includes(agency.toLowerCase());
+            const matchesStatus = status ? submission.status.toLowerCase() === status.toLowerCase() : true;
+
+            console.log("Submission Status:", submission.status, "Selected Status:", status);
+
+            return matchesEmail && matchesAgency && matchesStatus;
+        });
+        setSubmissions(filteredSubmissions);
+    }
     useEffect(() => {
         fetchSubmissions()
+        fetchAgencies()
     }, [])
+    useEffect(() => {
+        handleSearchFilters()
+    }, [search, agency, status])
     return ( 
       <DashboardLayout title="Submissions">
         <Toaster />
@@ -91,18 +120,18 @@ function Submissions() {
             <div className="filters">
                 <div className="search">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.9536 14.9458L21 21M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-                    <input type="text" placeholder="Search Submissions...." />
+                    <input type="text" placeholder="Search Submissions...." onChange={(e) => setSearch(e.target.value)} />
                 </div>
-                <select name="" id="">
+                <select name="" id="" value={agency} onChange={(e) => { setAgency(e.target.value); handleSearchFilters() }}>
                     <option value="">Select Agency</option>
-                    <option value="">Public Works Department</option>
-                    <option value="">City Utilities</option>
-                    <option value="">Sanitation Department</option>
+                    {agencies.map((agency) => (
+                        <option value={agency.name}>{agency.name}</option>
+                    ))}
                 </select>
-                <select name="" id="">
+                <select name="" id="" value={status} onChange={(e) => { setStatus(e.target.value); handleSearchFilters() }}>
                     <option value="">Select Status</option>
-                    <option value="">Pending</option>
-                    <option value="">Solved</option>
+                    <option value="pending">Pending</option>
+                    <option value="responded">Responded</option>
                 </select>
             </div>
             <div className="table-container">

@@ -52,14 +52,24 @@ function Dashboard() {
                 </div>
             </div>
             <div className="top-agencies">
-                <h1>Top Agencies</h1>
+                <h1>Top Agencies With Most Submissions</h1>
                 <div className="top-agencies-list">
-                    {dashboardData ? dashboardData.top_agencies.map((agency: any) => (
-                        <div className="top-agency" key={agency.id}>
-                            <p className="name">{agency.name}</p>
-                            <p className="submissions">{agency.total_submissions}</p>
-                        </div>
-                    )) : null}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Agency</th>
+                                <th>Total Submissions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {dashboardData ? dashboardData.top_agencies.map((agency: any) => (
+                                <tr key={agency.id}>
+                                    <td>{agency.name}</td>
+                                    <td><span>{agency.total_submissions}</span></td>
+                                </tr>
+                            )) : null}
+                        </tbody>
+                    </table>
                 </div>
             </div>
             {isLoading ? <Loader /> : null}

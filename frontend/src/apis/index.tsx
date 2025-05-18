@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+// track dev/prod and set base url accordingly
+const baseUrl = process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:8000/api/' : 'https://c.cblink.rw/api/';
+
 const axiosInstance = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/',
+  baseURL: baseUrl,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
