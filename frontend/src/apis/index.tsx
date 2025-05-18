@@ -1,7 +1,11 @@
 import axios from 'axios';
+import https from 'https';
 
-// track dev/prod and set base url accordingly
 const baseUrl = process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:8000/api/' : 'https://c.cblink.rw/api/';
+
+const agent = new https.Agent({  
+  rejectUnauthorized: false
+});
 
 const axiosInstance = axios.create({
   baseURL: baseUrl,
@@ -9,6 +13,7 @@ const axiosInstance = axios.create({
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   },
+  httpsAgent: agent
 });
 
 axiosInstance.interceptors.request.use(
