@@ -1,0 +1,18 @@
+@import '../../scss/index.scss';
+.footer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-top: 1px solid #0000000c;
+    margin-top: 20px;
+    .copyright{
+        p{
+            font-size: 0.7rem;
+            font-weight: 400;
+            opacity: 0.7;
+            color: $black;
+        }
+    }
+}

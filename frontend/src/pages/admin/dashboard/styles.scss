@@ -1,0 +1,60 @@
+@import '../../../scss/index.scss';
+.dash-stats{
+    padding: 30px 20px;
+    h1{
+        font-size: 0.9rem;
+        margin: 0 0 20px;
+    }
+    .stats{
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+        .stat-card{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid $gray;
+            cursor: pointer;
+            @media (max-width: 800px) {
+                padding: 10px 10px;
+            }
+            @media (max-width: 705px) {
+                padding: 20px 20px;
+                min-width: 180px;
+            }
+            .stat-card-icon{
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                position: relative;
+                svg{
+                    width: 60%;
+                    height: 60%;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+            }
+            h2{
+                font-size: 0.9rem;
+                font-weight: 600;
+                color: $black;
+            }
+            p{
+                font-size: 1.1rem;
+                font-weight: 400;
+                opacity: 0.7;
+                color: $black;
+            }
+            &:hover{
+                transform: scale(1.05);
+                transition: all 0.3s ease;
+            }
+        }
+    }
+}

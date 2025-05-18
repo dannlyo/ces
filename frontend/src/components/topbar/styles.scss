@@ -1,0 +1,89 @@
+@import '../../scss/index.scss';
+.topbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 40px;
+    border-bottom: 1px solid $gray;
+    @media (max-width: 480px) {
+        padding: 7px 20px;
+    }
+    @media (max-width: 371px) {
+        padding: 7px 10px;
+    }
+    a{
+        text-decoration: none;
+        color: $blue;
+        font-size: 1.1rem;
+        font-weight: 600;
+        @media (max-width: 480px) {
+            font-size: 0.9rem;
+        }
+        @media (max-width: 371px) {
+            font-size: 0.8rem;
+        }
+        span{
+            color: $black;
+            font-size: 0.8rem;
+            font-weight: 400;
+            @media (max-width: 480px) {
+                font-size: 0.7rem;
+            }
+            @media (max-width: 371px) {
+                font-size: 0.6rem;
+            }
+        }
+    }
+    .links{
+        display: flex;
+        gap: 40px;
+        @media (max-width: 480px) {
+            gap: 20px;
+        }
+        @media (max-width: 371px) {
+            gap: 10px;
+        }
+        a{
+            text-decoration: none;
+            color: $black;
+            font-size: 0.8rem;
+            font-weight: 500;
+            &:hover{
+                opacity: 0.8;
+                text-decoration: underline;
+            }
+            &:active{
+                opacity: 0.8;
+                text-decoration: underline;
+            }
+        }
+    }
+    .auth{
+        display: flex;
+        gap: 20px;
+        button{
+            border: 1px solid $blue;
+            background-color: $blue;
+            color: $white;
+            cursor: pointer;
+            padding: 7px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            font-weight: 500;
+            @media (max-width: 480px) {
+                font-size: 0.7rem;
+                padding: 5px 15px;
+            }
+            @media (max-width: 371px) {
+                font-size: 0.6rem;
+                padding: 10px 20px;
+            }
+            &:hover{
+                background-color: $white;
+                color: $blue;
+            }
+        }
+    }
+}

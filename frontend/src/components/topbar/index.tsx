@@ -1,0 +1,18 @@
+import { Link } from "react-router-dom";
+import './styles.scss'
+const Topbar = () => {
+    return ( 
+        <div className="topbar">
+            <Link to="/">Citizen <span>Connect</span></Link>
+            <div className="links">
+                <Link to={'/'}>Home</Link>
+                <Link to={'/about'}>About</Link>
+            </div>
+            <div className="auth">
+                <button>Submit Feedback</button>
+            </div>
+        </div>
+     );
+}
+ 
+export default Topbar;
