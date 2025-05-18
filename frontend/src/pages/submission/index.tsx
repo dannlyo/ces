@@ -7,7 +7,7 @@ import './styles.scss'
 import { submitComplaint } from '../../apis/submissions'
 import toast, { Toaster } from 'react-hot-toast'
 import { getAgencies } from '../../apis/agencies'
-
+import { Link } from 'react-router-dom'
 interface Agency {
   id: number
   name: string
@@ -15,6 +15,9 @@ interface Agency {
 
 function Submission() {
   const [isLoading, setIsLoading] = useState(false)
+  const [submission, setSubmission] = useState({
+    sid: '',
+  })
   const [payload, setPayload] = useState({
     email: '',
     title: '',
@@ -36,6 +39,9 @@ function Submission() {
     .then((res) => {
       console.log(res)
       setIsLoading(false)
+      setSubmission({
+        sid: res.data.sid,
+      })
       setPayload({
         email: '',
         title: '',
@@ -66,6 +72,14 @@ function Submission() {
         <form className="submit" onSubmit={handleSubmit}>
           <h1>Submit Your <span>Complaint</span></h1>
           <p>Help us improve public services by sharing your experience or reporting an issue</p>
+
+          {submission.sid && (
+            <div className="submission-details">
+              <p>Your submission ID is: <span>{submission.sid}</span></p>
+              <p>Thank you for your feedback!</p>
+              <Link to={`/track?sid=${submission.sid}`}> Click here to track your submission</Link>
+            </div>
+          )}
 
           <label>Email</label>
           <input 

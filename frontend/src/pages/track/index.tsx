@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Footer from '../../components/foot'
 import Topbar from '../../components/topbar'
 import '../../scss/index.scss'
@@ -30,15 +30,16 @@ function Track() {
   const [result, setResult] = useState<Result | null>(null)
   const [empty, setEmpty] = useState(false)
   const [loading, setLoading] = useState(false)
-  const handleSearch = async () => {
-    if(!search){
+
+  const performSearch = async (searchId: string) => {
+    if(!searchId){
       toast.error('Please enter an ID to track your submission')
       return
     }
     setEmpty(false)
     setResult(null)
     setLoading(true)
-    const res = await trackSubmission(search)
+    const res = await trackSubmission(searchId)
     if(res.status == 'success'){
       setResult(res.data)
       toast.success('Submission found')
@@ -48,6 +49,18 @@ function Track() {
     }
     setLoading(false)
   }
+
+  const handleSearch = () => performSearch(search)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const sid = params.get('sid')
+    if(sid){
+      setSearch(sid)
+      performSearch(sid)
+    }
+  }, [])
+
   return (
     <>
       <Topbar />
