@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import DashboardLayout from "../../../layouts/dashboard";
 import './styles.scss'
 import { getDashboardData } from "../../../apis/dashboard";
+import Loader from "../../../components/loader";
 
 function Dashboard() {
     const [dashboardData, setDashboardData] = useState<any>(null)
@@ -61,6 +62,7 @@ function Dashboard() {
                     )) : null}
                 </div>
             </div>
+            {isLoading ? <Loader /> : null}
         </div>
       </DashboardLayout>  
     );
