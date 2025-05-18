@@ -12,7 +12,9 @@
     justify-content: center;
     align-items: center;
     .modal-content{
-        width: 600px;
+        width: 650px;
+        max-height: 90vh;
+        overflow-y: auto;
         background: white;
         padding: 20px;
         border-radius: 10px;
@@ -74,17 +76,48 @@
                 }
               }
             }
-          
-            .meta {
-              margin-top: 1rem;
-              font-size: 0.8rem;
-              color: #666;
+            
+            .meta-section{
               display: flex;
+              justify-content: space-between;
+              align-items: center;
               gap: 2rem;
+              margin-top: 20px;
+              .time {
+                font-size: 0.75rem;
+                color: $blue;
+                width: 50%;
+                strong{
+                  font-weight: 600;
+                }
+              }
+              .submitted-by{
+                font-size: 0.8rem;
+                display: flex;
+                flex-direction: column;
+                width: 50%;
+                h4 {
+                  margin-bottom: 0.5rem;
+                  font-size: 0.8rem;
+                  font-weight: 500;
+                  color: $black;
+                }
+            
+                p {
+                  background-color: #f9f9f9;
+                  padding: 5px 10px;
+                  border-radius: 8px;
+                  color: #333;
+                  font-size: 0.75rem;
+                  width: fit-content;
+                  line-height: 1.5;
+                  white-space: pre-wrap;
+                }
+              }
             }
           
             .section {
-              margin-top: 2rem;
+              margin-top: 20px;
           
               h4 {
                 margin-bottom: 0.5rem;
@@ -110,7 +143,7 @@
             
               h4 {
                 margin-bottom: 0.5rem;
-                font-size: 0.9rem;
+                font-size: 0.8rem;
                 font-weight: 500;
                 color: $blue;
               }
@@ -125,9 +158,38 @@
                 line-height: 1.6;
                 white-space: pre-wrap;
                 box-shadow: 0 2px 5px rgba(63, 81, 181, 0.1);
+                .response-time{
+                  margin-top: 10px;
+                  font-size: 0.7rem;
+                  text-align: right;
+                }
               }
+              
             }
-            
+            .respond-section{
+                margin-top: 20px;
+                h4{
+                    margin-bottom: 0.5rem;
+                    font-size: 0.9rem;
+                }
+                textarea{
+                    width: 100%;
+                    padding: 10px;
+                    border-radius: 8px;
+                    font-size: 0.7rem;
+                    outline: none;
+                    border: 1px solid $gray;
+                }
+                button{
+                    margin-top: 10px;
+                    width: 100%;
+                    padding: 5px 20px;
+                    border-radius: 8px;
+                    border: none;
+                    background: $blue;
+                    color: white;
+                }   
+            }
         }
     }
 }

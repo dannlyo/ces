@@ -9,8 +9,15 @@ class AgenciesController extends Controller
 {
     public function index()
     {
-        $agencies = agencies::all();
-        return response()->json($agencies);
+        try{
+            $agencies = agencies::latest()->get();
+            return response()->json([
+                'status' => 'success',
+                'data' => $agencies
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
     
 }

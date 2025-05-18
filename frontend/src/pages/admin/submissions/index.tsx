@@ -1,10 +1,12 @@
 import DashboardLayout from "../../../layouts/dashboard";
 import './styles.scss'
-import { getSubmissions } from '../../../apis/submissions'
+import { getSubmissions, respondSubmission } from '../../../apis/submissions'
 import { useEffect, useState } from 'react'
 import moment from "moment";
 import Modal from "../../../components/modal";
-
+import { toast } from "react-hot-toast/headless";
+import { Toaster } from "react-hot-toast";
+import Loader from "../../../components/loader";
 interface Submission {
     id: number
     sid: string
@@ -17,7 +19,7 @@ interface Submission {
     status: string
     created_at: string
     response: {
-        message: string
+        response: string
         created_at: string
     }
 }
@@ -31,6 +33,8 @@ function Submissions() {
         setSelectedSubmission(submission)
         setIsModalOpen(true)
     }
+    const [respondMessage, setRespondMessage] = useState('')
+    const [respondLoading, setRespondLoading] = useState(false)
     const fetchSubmissions = async () => {
         setIsLoading(true)
         try {
@@ -46,23 +50,43 @@ function Submissions() {
             setIsLoading(false)
         }
     }
-    // const [respondPayload, setRespondPayload] = useState({
-    //     message: '',
-    //     submission_id: ''
-    // })
-    // const handleRespond = async () => {
-    //     const res = await respondSubmission(respondPayload)
-    //     if(res.status == 'success'){
-    //         toast.success('Submission responded successfully')
-    //     } else {
-    //         toast.error('Failed to respond to submission')
-    //     }
-    // }
+    const handleRespond = async () => {
+        setRespondLoading(true)
+        try {
+            const payload = {
+                message: respondMessage,
+                submission_id: selectedSubmission?.id
+            }
+            const res = await respondSubmission(payload)
+            if(res.status == 'success'){
+                toast.success('Submission responded successfully')
+                fetchSubmissions()
+                setRespondMessage('')
+                // setSelectedSubmission(prev => prev ? ({
+                //     ...prev,
+                //     response: {
+                //         response: res.data.response,
+                //         created_at: res.data.created_at
+                //     }
+                // }) : null)
+                setIsModalOpen(false)
+                setRespondLoading(false)
+            } else {
+                toast.error(res.message)
+                throw new Error(res.message)
+            }
+        } catch (error: any) {
+            console.log(error)
+        } finally {
+            setRespondLoading(false)
+        }
+    }
     useEffect(() => {
         fetchSubmissions()
     }, [])
     return ( 
       <DashboardLayout title="Submissions">
+        <Toaster />
         <div className="dash-subs">
             <div className="filters">
                 <div className="search">
@@ -98,7 +122,7 @@ function Submissions() {
                         {
                             submissions.map((submission: any) => (
                                 <tr key={submission.id}>
-                                    <td>{submission.id}</td>
+                                    <td>{submission.sid}</td>
                                     <td className="email">{submission.email}</td>
                                     <td className="agency">{submission.agency.name}</td>
                                     <td className="title">{submission.message}</td>
@@ -125,11 +149,7 @@ function Submissions() {
                 </table>
             </div>
             {
-                isLoading && (
-                    <div className="loading">
-                        <div className="loading-spinner"></div>
-                    </div>
-                )
+                isLoading && <Loader />
             }
         </div>
         {
@@ -148,39 +168,53 @@ function Submissions() {
                         </span>
                         </div>
 
-                        <div className="meta">
-                        <div>
-                            <strong>Submitted:</strong> {moment(selectedSubmission.created_at).fromNow()} ( {moment(selectedSubmission.created_at).format('D MMM YYYY')} )
+                        <div className="meta-section">
+                            <div className="submitted-by">
+                                <h4>Submitted By</h4>
+                                <p>{selectedSubmission.email}</p>
+                            </div>
+                            <div className="time">
+                                <strong>Submitted:</strong> {moment(selectedSubmission.created_at).fromNow()} ( {moment(selectedSubmission.created_at).format('D MMM YYYY')} )
+                            </div>
                         </div>
-                        {selectedSubmission.response && (
-                            <div>
-                                <strong>Responded:</strong> {moment(selectedSubmission.response.created_at).fromNow()} ( {moment(selectedSubmission.response.created_at).format('D MMM YYYY')} )
+
+                        <div className="section">
+                            <h4>Agency</h4>
+                            <p>{selectedSubmission.agency.name}</p>
+                        </div>
+
+                        <div className="section">
+                            <h4>Message</h4>
+                            <p>{selectedSubmission.message}</p>
+                        </div>
+
+                        {selectedSubmission.response && selectedSubmission.response.response && (
+                            <div className="response-section">
+                                <h4>Agency Response</h4>
+                                <div className="response-box">
+                                    {selectedSubmission.response.response}
+                                    <div className="response-time">
+                                        <strong>Responded:</strong> {moment(selectedSubmission.response.created_at).fromNow()} ( {moment(selectedSubmission.response.created_at).format('D MMM YYYY')} )
+                                    </div>
+                                </div>
                             </div>
                         )}
-                        </div>
 
-                        <div className="section">
-                        <h4>Message</h4>
-                        <p>{selectedSubmission.message}</p>
-                        </div>
-
-                        <div className="section">
-                        <h4>Agency</h4>
-                        <p>{selectedSubmission.agency.name}</p>
-                        </div>
-
-                        <div className="section">
-                        <h4>Submitted By</h4>
-                        <p>{selectedSubmission.email}</p>
-                        </div>
-
-                        {selectedSubmission.response && (
-                        <div className="response-section">
-                            <h4>Agency Response</h4>
-                            <div className="response-box">
-                            {selectedSubmission.response.message}
+                        { !selectedSubmission.response && selectedSubmission.status == 'pending' && (
+                            <div className="respond-section">
+                                <h4>Respond to Submission</h4>
+                                <textarea 
+                                    name="message" 
+                                    id="message" 
+                                    rows={5} 
+                                    placeholder="Enter your response here" 
+                                    value={respondMessage}
+                                    onChange={(e) => setRespondMessage(e.target.value)}
+                                />
+                                <button onClick={handleRespond} disabled={respondLoading}>
+                                    {respondLoading ? 'Responding...' : 'Respond'}
+                                </button>
                             </div>
-                        </div>
                         )}
                     </div>
                 </div>

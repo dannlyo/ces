@@ -1,11 +1,17 @@
 // import { useState } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Footer from '../../components/foot'
 import Topbar from '../../components/topbar'
 import '../../scss/index.scss'
 import './styles.scss'
 import { submitComplaint } from '../../apis/submissions'
 import toast, { Toaster } from 'react-hot-toast'
+import { getAgencies } from '../../apis/agencies'
+
+interface Agency {
+  id: number
+  name: string
+}
 
 function Submission() {
   const [isLoading, setIsLoading] = useState(false)
@@ -15,6 +21,7 @@ function Submission() {
     message: '',
     agency_id: ''
   })
+  const [agencies, setAgencies] = useState<Agency[]>([])
   const handleSubmit = (e: any) => {
     e.preventDefault()
     setIsLoading(true)
@@ -41,6 +48,13 @@ function Submission() {
       setIsLoading(false)
     })
   }
+  const fetchAgencies = async () => {
+    const res = await getAgencies()
+    setAgencies(res.data)
+  }
+  useEffect(() => {
+    fetchAgencies()
+  }, [])
   return (
     <>
       <Topbar />
@@ -73,7 +87,9 @@ function Submission() {
             onChange={(e) => setPayload((data) => ({...data, agency_id: e.target.value}))}
           >
             <option value="">Select Agency</option>
-            <option value="1">Public Works</option>
+            {agencies.map((agency) => (
+              <option value={agency.id}>{agency.name}</option>
+            ))}
           </select>
           <label>Description</label>
           <textarea

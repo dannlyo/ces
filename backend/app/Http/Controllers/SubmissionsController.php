@@ -46,7 +46,7 @@ class SubmissionsController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Submited successfully, Check your email to track your submission',
-                'submission' => $submission
+                'data' => $submission
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -57,9 +57,15 @@ class SubmissionsController extends Controller
     {
         try{
             $submission = submissions::with(['agency', 'response'])->where('sid', $sid)->first();
+            if(!$submission){
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Submission not found'
+                ]);
+            }
             return response()->json([
                 'status' => 'success',
-                'submission' => $submission
+                'data' => $submission
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -76,7 +82,7 @@ class SubmissionsController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Response created successfully',
-            'submission' => $submission
+            'data' => $submission
         ]);
     }
     
