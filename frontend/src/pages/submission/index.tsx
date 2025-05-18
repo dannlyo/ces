@@ -47,6 +47,9 @@ function Submission() {
       console.log(err)
       setIsLoading(false)
     })
+    .finally(() => {
+      setIsLoading(false)
+    })
   }
   const fetchAgencies = async () => {
     const res = await getAgencies()
@@ -88,7 +91,7 @@ function Submission() {
           >
             <option value="">Select Agency</option>
             {agencies.map((agency) => (
-              <option value={agency.id}>{agency.name}</option>
+              <option value={agency.id} key={agency.id}>{agency.name}</option>
             ))}
           </select>
           <label>Description</label>

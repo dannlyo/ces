@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SubmissionReceivedMail;
 use App\Models\submissions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class SubmissionsController extends Controller
 {
@@ -43,6 +45,8 @@ class SubmissionsController extends Controller
                 'sid' => $sid,
                 'message' => $request->message
             ]);
+            Mail::to($request->email)->send(new SubmissionReceivedMail($sid));
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Submited successfully, Check your email to track your submission',
