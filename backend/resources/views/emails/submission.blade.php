@@ -132,7 +132,7 @@
         <div class="highlight">{{ $sid }}</div>
         
         <p>Want to check your submission status?</p>
-        <a href="https://citizenconnect.example.com/track" class="button">
+        <a href="https://ces-gkee.vercel.app/track" class="button">
             Track My Submission →
         </a>
 

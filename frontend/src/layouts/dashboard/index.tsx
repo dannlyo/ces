@@ -1,5 +1,8 @@
 import { NavLink } from "react-router-dom";
 import './styles.scss';
+import { Toaster } from "react-hot-toast";
+import { logout } from "../../apis/auth";
+import { toast } from "react-hot-toast";
 
 interface LayoutInterface {
     children: React.ReactNode,
@@ -7,8 +10,27 @@ interface LayoutInterface {
 }
 
 const DashboardLayout: React.FC<LayoutInterface> = ({ title, children }) => {
+    const user = JSON.parse(localStorage.getItem('connect_user') || '{}')
+    const handleLogout = async () => {
+        try {
+            await toast.promise(
+                logout(),
+                {
+                    loading: 'Logging out...',
+                    success: 'Successfully logged out',
+                    error: 'Failed to logout'
+                }
+            );
+            localStorage.removeItem('connect_token')
+            localStorage.removeItem('connect_user')
+            window.location.href = '/'
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
+    }
     return ( 
         <div className="dashboard">
+            <Toaster />
             <div className="sidebar">
                 <div className="logo">
                     <h1>Connect <span>Citizen</span></h1>
@@ -33,8 +55,8 @@ const DashboardLayout: React.FC<LayoutInterface> = ({ title, children }) => {
                 <div className="navbar">
                     <h1>{title}</h1>
                     <div className="profile">
-                        <h3>John Doe</h3>
-                        <button>Log out</button>
+                        <h3>{user.name}</h3>
+                        <button onClick={handleLogout}>Log out</button>
                     </div>
                 </div>
                 {children}

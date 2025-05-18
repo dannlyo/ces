@@ -6,6 +6,7 @@ import Submissions from './pages/admin/submissions';
 import Agencies from './pages/admin/agencies';
 import Submission from './pages/submission'
 import Track from './pages/track';
+import Login from './pages/login';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/submissions" element={<Submissions />} />
         <Route path="/admin/agencies" element={<Agencies />} />
+        <Route path="/login" element={<Login />} />
         {/* Catch-all route */}
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
