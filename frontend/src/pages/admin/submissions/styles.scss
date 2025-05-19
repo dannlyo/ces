@@ -103,19 +103,36 @@
                     text-overflow: ellipsis;
                 }
                 span{
-                    padding: 4px 15px;
+                    padding: 4px 10px;
                     font-size: 0.7rem;
                     border-radius: 30px;
                     font-weight: 500;
+                    width: fit-content;
                     &.pending{
                         border: 1px solid #9b9b01;
-                        background: #e1e1009b;
+                        background: #e1e100b9;
                         color: #7d7d01;
+                        display: flex;
+                        gap: 5px;
+                        align-items: center;
+                        svg{
+                            width: 15px;
+                            height: 15px;
+                            stroke: #7d7d01;
+                        }
                     }
                     &.responded{
                         border: 1px solid #01a401;
                         background: #02d90241;
                         color: #01a401;
+                        display: flex;
+                        gap: 5px;
+                        align-items: center;
+                        svg{
+                            width: 15px;
+                            height: 15px;
+                            stroke: #01a401;
+                        }
                     }
                 }                  
       

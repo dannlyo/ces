@@ -34,6 +34,19 @@ function Submissions() {
     const [agency, setAgency] = useState('')
     const [status, setStatus] = useState('')
     const [agencies, setAgencies] = useState<any[]>([])
+
+    const filteredSubmissions = submissions.filter((submission) => {
+        const matchesSearch = search.toLowerCase() === '' || 
+            submission.email.toLowerCase().includes(search.toLowerCase()) ||
+            submission.message.toLowerCase().includes(search.toLowerCase()) ||
+            submission.sid.toLowerCase().includes(search.toLowerCase());
+            
+        const matchesAgency = agency === '' || submission.agency.name === agency;
+        const matchesStatus = status === '' || submission.status === status;
+
+        return matchesSearch && matchesAgency && matchesStatus;
+    });
+
     const handleView = (submission: Submission) => {
         setSelectedSubmission(submission)
         setIsModalOpen(true)
@@ -94,25 +107,10 @@ function Submissions() {
         }
         setIsLoading(false)
     }
-    const handleSearchFilters = () => {
-        const filteredSubmissions = submissions.filter((submission) => {
-            const matchesEmail = submission.email.toLowerCase().includes(search.toLowerCase());
-            const matchesAgency = submission.agency.name.toLowerCase().includes(agency.toLowerCase());
-            const matchesStatus = status ? submission.status.toLowerCase() === status.toLowerCase() : true;
-
-            console.log("Submission Status:", submission.status, "Selected Status:", status);
-
-            return matchesEmail && matchesAgency && matchesStatus;
-        });
-        setSubmissions(filteredSubmissions);
-    }
     useEffect(() => {
         fetchSubmissions()
         fetchAgencies()
     }, [])
-    useEffect(() => {
-        handleSearchFilters()
-    }, [search, agency, status])
     return ( 
       <DashboardLayout title="Submissions">
         <Toaster />
@@ -122,13 +120,13 @@ function Submissions() {
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14.9536 14.9458L21 21M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
                     <input type="text" placeholder="Search Submissions...." onChange={(e) => setSearch(e.target.value)} />
                 </div>
-                <select name="" id="" value={agency} onChange={(e) => { setAgency(e.target.value); handleSearchFilters() }}>
+                <select name="" id="" value={agency} onChange={(e) => { setAgency(e.target.value); }}>
                     <option value="">Select Agency</option>
                     {agencies.map((agency) => (
                         <option value={agency.name}>{agency.name}</option>
                     ))}
                 </select>
-                <select name="" id="" value={status} onChange={(e) => { setStatus(e.target.value); handleSearchFilters() }}>
+                <select name="" id="" value={status} onChange={(e) => { setStatus(e.target.value); }}>
                     <option value="">Select Status</option>
                     <option value="pending">Pending</option>
                     <option value="responded">Responded</option>
@@ -149,13 +147,29 @@ function Submissions() {
                     </thead>
                     <tbody>
                         {
-                            submissions.map((submission: any) => (
+                            filteredSubmissions.map((submission: any) => (
                                 <tr key={submission.id}>
                                     <td>{submission.sid}</td>
                                     <td className="email">{submission.email}</td>
                                     <td className="agency">{submission.agency.name}</td>
                                     <td className="title">{submission.message}</td>
-                                    <td><span className={submission.status}>{submission.status}</span></td>
+                                    <td>
+                                        <span className={submission.status}>
+                                            {
+                                                submission.status === 'pending' ? (
+                                                    <>
+                                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 7V12H15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                                        Pending
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M7.75 12L10.58 14.83L16.25 9.17004" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                                        Responded
+                                                    </>
+                                                )
+                                            }
+                                        </span>
+                                    </td>
                                     <td>{moment(submission.created_at).fromNow()}</td>
                                     <td>
                                         {submission.response && (
