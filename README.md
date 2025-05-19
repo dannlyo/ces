@@ -32,12 +32,12 @@ The application follows a simple, effective **3-step workflow**:
 
 ---
 
-## ⚙️ Technologies Used
+## ⚙️ Tech Stack
 
 - **Frontend**: [Vite + React.js](https://vitejs.dev/)
 - **Backend API**: [Laravel](https://laravel.com/)
+- **Deployment:** [Vercel](https://vercel.com)
 - **Notifications**: Email alerts on response
-- **Responsive Design**: Optimized for all screen sizes
 
 ---
 
@@ -90,30 +90,40 @@ The application follows a simple, effective **3-step workflow**:
 
 ## 📦 Deployment & Scalability
 
-This is the **first MVP (prototype)**. It currently supports:
+This MVP is designed for centralized use, where a single **Super Admin** still handles all incoming complaints. This simplifies initial deployment and testing. Which has to be updated for easier follow up.
 
-- Complaint submission and routing
-- Admin dashboard and responses
-- Citizen tracking system
-- **Email notifications on response**
-
-### ✅ Planned Future Enhancements:
-
-- Multiple user roles per agency
-- Role-based authentication
-- SMS alerts
-- File uploads and attachments
-- Multilingual support
-- Citizen feedback on agency responses
-- Citizen able to see all his/her submissions
+The architecture is intentionally designed for **easy future expansion**, allowing:
+- Addition of **multiple agency roles**
+- **Authentication layers**
+- **AI-based routing**
+- External integrations like **SMS/email APIs** and **file storage**
 
 ---
 
-## 📬 Contact / Contribution
+## 🔭 Planned Future Enhancements
 
-Interested in contributing or collaborating on this project?  
-Open an issue or pull request – we welcome suggestions and improvements!
+- ➕ **Agency-specific dashboards**
+- ➕ **AI/NLP-assisted routing** based on complaint content
+- ➕ **SMS notifications** for complaint updates
+- ➕ **Citizen portal** to track all personal submissions together
+- ➕ **Citizen feedback** follow up
 
 ---
+
+## 🚀 Features Implemented So Far
+
+- ✅ **Complaint submission** via web form
+- ✅ **Basic routing** (citizen selects agency manually)
+- ✅ **Super Admin dashboard** to view and manage all submissions
+- ✅ **Status updates** and responses sent to citizens via email
+- ✅ **Tracking** of complaints through email notifications
+
+---
+
+## ❌ Features Not Implemented Yet
+
+- ❌ Multiple user roles (agency-specific admins)
+- ❌ AI-assisted routing using NLP
+- ❌ Citizen dashboard to view past submissions (But can be tracked using Ids sent on email)
 
 ### 🚀 [Live Deployed Version](https://ces-gkee.vercel.app/) – *Give it a try!*
