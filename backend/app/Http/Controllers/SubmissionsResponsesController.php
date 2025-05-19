@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SubmissionUpdateMail;
 use App\Models\submissions;
 use App\Models\submissions_responses;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class SubmissionsResponsesController extends Controller
 {
@@ -23,6 +25,15 @@ class SubmissionsResponsesController extends Controller
             ]);
             $submission->status = 'responded';
             $submission->save();
+
+            Mail::to($submission->email)->send(new SubmissionUpdateMail([
+                'sid' => $submission->sid,
+                'status' => 'Responded',
+                'agency' => $submission->agency->name,
+                'response' => $request->message,
+                'updated_at' => now()->format('Y-m-d H:i:s'),
+                'created_at' => $submission->created_at->format('Y-m-d H:i:s')
+            ]));
 
             return response()->json([
                 'status' => 'success',
